@@ -47,7 +47,7 @@
             <div class="row  justify-content-md-start">
                 <div class="col-sm-12 col-md-auto">
                     <small>
-                        <span><img src="../assets/tasks.svg" alt="" height="16px" width="auto">{{ tasks.length }} pending tasks of a total {{ taskToDo() }} | </span>
+                        <span><img src="../assets/tasks.svg" alt="" height="16px" width="auto">{{ taskToDo() }} pending tasks of a total of {{ tasks.length }} | </span>
                         <span class="text-warning" v-on:click="deleteCompletedTasks"><img src="../assets/erase.svg" alt="" height="20px" width="auto"><b>Delete completed tasks</b></span>
                     </small>
                 </div>
@@ -296,10 +296,18 @@
                 ],
                 textNewTask: "",
                 textFindTask: "",
-                checkedStatus: [], // USED FOR THE CHECKBOX, NOT USED AT THE MOMENT
+                // checkedStatus: [], // USED FOR THE CHECKBOX, NOT USED AT THE MOMENT
                 auxTasks: [],
                 priorityTasks: [],
                 show: true
+            }
+        },
+        sockets: {
+            connect: function () {
+                console.log('Socket connected');
+            },
+            allTasks: function (data) {
+                this.tasks = JSON.parse(data);
             }
         },
         methods: {
@@ -378,21 +386,6 @@
                     }
                 }
             }
-
-            // minutes: function(date){
-            //     var now = new Date();
-            //     var diffMs;
-            //     var diffDays;
-            //     var diffHrs;
-            //     var diffMins;
-            //     setInterval(() => {
-            //         diffMs = (now - date); // milliseconds between now & Christmas
-            //         diffDays = Math.floor(diffMs / 86400000); // days
-            //         diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-            //         diffMins = ""+ Math.round(((diffMs % 86400000) % 3600000) / 60000);
-            //     }, 1000);
-            //     return diffMins;
-            // }
         },
         computed: {
             // USED FOR CHOOSE COMPLETED OR INCOMPLETED TASKS, DEPENDS ON THE CHECKBOXX
@@ -454,14 +447,15 @@
         // START MOUNTING YOUR LOCALSTORAGE, IF THE LOCALSTORAGE IS NOT NULL
         mounted: function(){
             // this.tasks = JSON.parse(localStorage.getItem("tasks"));
-            if (localStorage.getItem("tasks") != null) {
-				this.tasks = JSON.parse(localStorage.getItem("tasks"));
-			}
+            // if (localStorage.getItem("tasks") != null) {
+			// 	this.tasks = JSON.parse(localStorage.getItem("tasks"));
+			// }
         },
 
         // UPDATE YOUR LOCAL STORAGE AFTER EVERY SINGLE CHANGE
         updated: function(){
-            localStorage.setItem("tasks",JSON.stringify(this.tasks));
+            // localStorage.setItem("tasks",JSON.stringify(this.tasks));
+            this.$socket.emit("allTasks", JSON.stringify(this.tasks));
         }  
     }
 </script>

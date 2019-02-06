@@ -21,9 +21,16 @@
     <br>
 
     <!-- MAIN CONTENT -->
-    <section class="container"><router-view/></section>
+    <section class="container">
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
+    </section>
     
     <br>
+
+    <!-- CHAT -->
+    <Chat></Chat>
 
     <!-- FOOTER -->
     <Footer></Footer>
@@ -50,11 +57,13 @@
 <script>
 // @ is an alias to /src
 import Footer from './components/Footer.vue'
+import Chat from './components/Chat.vue'
 
 export default {
     name: 'home',
         components: {
-            Footer
+            Footer,
+            Chat
         }
     }
 </script>

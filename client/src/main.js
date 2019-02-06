@@ -1,13 +1,19 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import VueSocketio from 'vue-socket.io-extended';
-import io from 'socket.io-client';
+import VueSocketIO from 'vue-socket.io';
 import Chat from 'vue-beautiful-chat';
+// import Notifications from 'vue-notification';
+// import vueFilePond from 'vue-filepond';
 
 Vue.use(Chat);
+// Vue.use(Notifications);
+// Vue.use(vueFilePond);
 
-Vue.use(VueSocketio, io('127.0.0.1:3000'));
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: 'http://localhost:3000/'
+}));
 
 Vue.config.productionTip = false
 
