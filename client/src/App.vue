@@ -32,6 +32,9 @@
     <!-- CHAT -->
     <Chat></Chat>
 
+    <!-- NOTIFICATIONS -->
+    <notifications group="foo" />
+
     <!-- FOOTER -->
     <Footer></Footer>
   </div>

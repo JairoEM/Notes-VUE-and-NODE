@@ -3,11 +3,13 @@ import App from './App.vue'
 import router from './router'
 import VueSocketIO from 'vue-socket.io';
 import Chat from 'vue-beautiful-chat';
-// import Notifications from 'vue-notification';
+import Notifications from 'vue-notification';
+// import * as FilePond from 'filepond';
 // import vueFilePond from 'vue-filepond';
 
 Vue.use(Chat);
-// Vue.use(Notifications);
+Vue.use(Notifications);
+// Vue.use(FilePond);
 // Vue.use(vueFilePond);
 
 Vue.use(new VueSocketIO({

@@ -29,16 +29,37 @@ var allTasks = [{
     order: "First Task",
     priority: "Low",
     date: "06/02/2019",
-    status: false
+    status: false,
+    user: "Server"
 }];
+var nick = "";
 
 // SOCKET.IO
 io.on('connection', function(socket){
     console.log('User connected');
-    socket.emit('allTasks', JSON.stringify(allTasks));
 
-    socket.on('allTasks', function(data){
-        allTasks = JSON.parse(data); 
+    socket.on('enterNickName', function(data){
+        nick = data;
+        socket.broadcast.emit('newUser', nick);
+
+        socket.emit('allTasks', JSON.stringify(allTasks));
+        socket.on('allTasks', function(data){
+            allTasks = JSON.parse(data);
+            io.emit('allTasks', JSON.stringify(allTasks));
+        });
+
+        socket.on('userMadeNewTask', function(data){
+            socket.broadcast.emit('userMadeNewTask', data);
+        });
+
+        socket.on('userDeleteTask', function(data){
+            socket.broadcast.emit('userDeleteTask', data);
+        });
+
+        socket.on('disconnect', function(){
+            console.log('User disconnected');
+            socket.broadcast.emit('userLogOff', nick);
+        });
     });
 
 
@@ -60,7 +81,5 @@ io.on('connection', function(socket){
     //       socket.broadcast.emit('nickOff', nick);
     //     });
     // });
-    socket.on('disconnect', function(){
-        console.log('User disconnected');
-    });
+    
 });
