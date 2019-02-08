@@ -1,9 +1,9 @@
 <template>
     <div class="notes">
         <div v-if="nickName == ''">
-            <div class="card" style="width: 18rem;">
-                <div class="card d-flex justify-content-center">
-                    <div class="card-body">
+            <div class="card" style="width: 18rem; margin: 0 auto;" >
+                <div class="card">
+                    <div class="card-body" >
                         <h5 class="card-title">Choose a nick</h5>
                         <input class="form-control" type="text" v-on:keyup.enter="enterNickName();" v-model="auxName" pattern="^[a-zA-Z0-9-_\.]{1,20}$"> <br>
                         <button type="button" class="btn btn-success" v-on:click="enterNickName();">Enter</button>
@@ -402,7 +402,11 @@
                 for(let i=0; i<this.tasks.length; i++){
                     if(this.tasks[i] == task){
                         // DELETED TASK ADVICE
-                        this.$socket.emit('userDeleteTask', task);
+                        var deletedOneTask = {
+                            user: this.nickName,
+                            order: task.order
+                        }
+                        this.$socket.emit('userDeleteTask', deletedOneTask);
                         this.$notify({
                             group: 'foo',
                             title: 'Task deleted',
