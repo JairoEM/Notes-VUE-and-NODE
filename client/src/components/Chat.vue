@@ -24,21 +24,21 @@ export default {
   data() {
     return {
       participants: [
-        {
-          id: 'user1',
-          name: 'Matteo',
-          imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
-        },
-        {
-          id: 'user2',
-          name: 'Support',
-          imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
-        }
+        // {
+        //   id: 'user1',
+        //   name: 'Matteo',
+        //   imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
+        // },
+        // {
+        //   id: 'user2',
+        //   name: 'Support',
+        //   imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
+        // }
       ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
-      titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
+      titleImageUrl: 'https://cdn0.iconfinder.com/data/icons/iconsweets2/40/talk_speak_chat.png',
       messageList: [
-          { type: 'text', author: `me`, data: { text: `Say yes!` } },
-          { type: 'text', author: `user1`, data: { text: `No.` } }
+          // { type: 'text', author: `me`, data: { text: `Say yes!` } },
+          // { type: 'text', author: `user1`, data: { text: `No.` } }
       ], // the list of the messages to show, can be paginated and adjusted dynamically
       newMessagesCount: 0,
       isChatOpen: false, // to determine whether the chat window should be open or closed
@@ -71,16 +71,28 @@ export default {
       messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
     }
   },
+  sockets:{
+    allChaters: function(data) {
+      this.participants = data;
+    },
+    chatterOff: function(data) {
+      this.participants = data;
+    },
+    allMessages: function(data) {
+      this.messageList = [ ...this.messageList, data ];
+    }
+  },
   methods: {
     sendMessage (text) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.onMessageWasSent({ author: 'support', type: 'text', data: { text } })
+        // this.onMessageWasSent({ author: 'support', type: 'text', data: { text } })
       }
     },
     onMessageWasSent (message) {
       // called when the user sends a message
       this.messageList = [ ...this.messageList, message ]
+      this.$socket.emit('newMessage', message);
     },
     openChat () {
       // called when the user clicks on the fab button to open the chat

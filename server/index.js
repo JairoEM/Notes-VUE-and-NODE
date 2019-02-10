@@ -34,6 +34,14 @@ var allTasks = [{
 }];
 var nick = "";
 
+var chatters =[{
+    id: 'User0',
+    name: 'Support',
+    imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
+}];
+
+var chat = [];
+
 // SOCKET.IO
 io.on('connection', function(socket){
     console.log('User connected');
@@ -41,6 +49,27 @@ io.on('connection', function(socket){
     socket.on('enterNickName', function(data){
         nick = data;
         socket.broadcast.emit('newUser', nick);
+
+        var newChatter = {
+            id: 'User'+ Math.floor(Math.random() * (100 - 1) + 1),
+            name: nick,
+            imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
+        }
+        chatters.push(newChatter);
+        io.emit('allChaters', chatters);
+        socket.on('newMessage', function(data){
+            // var newMessage = nick +': '+data.data.text;
+            // var message = {
+            //     author: data.author,
+            //     type: 'text',
+            //     data: {
+            //         newMessage
+            //     }
+            // }
+            data.author = '';
+            // data.data.text = data.author + ': ' + data.data.text;
+            socket.broadcast.emit('allMessages', data);
+        });
 
         socket.emit('allTasks', JSON.stringify(allTasks));
         socket.on('allTasks', function(data){
@@ -58,6 +87,12 @@ io.on('connection', function(socket){
 
         socket.on('disconnect', function(){
             console.log('User disconnected');
+            for(let i = 0; i<chatters.length; i++){
+                if(chatters[i].name == data){
+                    chatters.splice(i, 1);
+                    socket.broadcast.emit('chatterOff', chatters);
+                }
+            }
             socket.broadcast.emit('userLogOff', nick);
         });
     });
